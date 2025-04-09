@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, ReactNode, useContext, useState } from "react";
 
 interface MyContextType {
@@ -18,6 +16,8 @@ interface MyContextProviderProps {
 export const TestProvider: React.FC<MyContextProviderProps> = ({
   children,
 }) => {
+
+  // you can also use useReducer here if you want to manage complex state
   const [count, setCount] = useState<number>(0);
   const [enabled, ] = useState<boolean>(false);
 

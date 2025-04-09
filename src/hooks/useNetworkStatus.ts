@@ -1,22 +1,49 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from "react";
 
-export function useNetworkStatus() {
-const [isOnline, setIsOnline] = useState<boolean | null>(null)
+const listeners = new Set<() => void>();
+let isOnline = false;
 
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true)
-    const handleOffline = () => setIsOnline(false)
+export const store = {
+  getSnapshot: () => {
+    isOnline = navigator.onLine;
+    return isOnline;
+  },
+  subscribe: (callback: () => void) => {
+    listeners.add(callback);
 
-    setIsOnline(navigator.onLine)
+    const checkStatus = () => {
+      const newStatus = navigator.onLine;
+      if (newStatus !== isOnline) {
+        isOnline = newStatus;
+        store.emitChange();
+      }
+    };
 
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
+    window.addEventListener("online", checkStatus);
+    window.addEventListener("offline", checkStatus);
 
     return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
+      listeners.delete(callback);
+      window.removeEventListener("online", checkStatus);
+      window.removeEventListener("offline", checkStatus);
+    };
+  },
+  getServerSnapshot: () => {
+    return false;
+  },
+  emitChange: () => {
+    for (const callback of listeners) {
+      callback();
     }
-  }, [])
+  },
+};
 
-  return isOnline
+export function useNetworkStatus() {
+  return useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getServerSnapshot,
+  );
 }
+
+
