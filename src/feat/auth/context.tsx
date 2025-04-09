@@ -36,7 +36,6 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   useEffect(() => {
     // Provider is isolated, this does not rerender the other components except if you update the state
     const t = setInterval(() => {
-      console.log("#test,");
     }, 1000);
     return () => clearInterval(t);
   }, []);
