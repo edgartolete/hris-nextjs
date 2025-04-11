@@ -4,7 +4,6 @@ import {
   createContext,
   ReactNode,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
@@ -32,13 +31,6 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   const logout = () => {
     setIsLogin(false);
   };
-
-  useEffect(() => {
-    // Provider is isolated, this does not rerender the other components except if you update the state
-    const t = setInterval(() => {
-    }, 1000);
-    return () => clearInterval(t);
-  }, []);
 
   return (
     <AuthContext.Provider value={{ isLogin, login, logout }}>

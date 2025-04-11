@@ -36,7 +36,6 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
     const params = new URLSearchParams(query);
 
     for (const [key, value] of params.entries()) {
-      console.log("# key, value", key, value);
       if (value === "false" || !modals.has(key)) continue;
 
       openedModals.set(key, { open: true, value });
@@ -70,7 +69,7 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
 
       const params = new URLSearchParams(searchParams.toString());
       const value = params.get(key);
-      return { open: value !== "false", value: value ?? "false" };
+      return { open: value !== "false", value: value ?? "" };
     },
     [searchParams],
   );
