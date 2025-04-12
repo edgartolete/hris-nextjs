@@ -1,14 +1,19 @@
-import { AuthContextProvider } from "@/feat/auth/context";
-import { ModalContextProvider } from "@/feat/modals/context";
+import { AuthContextProvider } from '@/feat/auth/context'
+import { ModalContextProvider } from '@/feat/modals/context'
+import { cookies } from 'next/headers'
 
-export default function Providers({
-  children,
+export default async function Providers({
+  children
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('accessToken') || ''
+  const refreshToken = cookieStore.get('refreshToken') || ''
+
   return (
-    <AuthContextProvider>
+    <AuthContextProvider accessToken={accessToken} refreshToken={refreshToken}>
       <ModalContextProvider>{children}</ModalContextProvider>
     </AuthContextProvider>
-  );
+  )
 }

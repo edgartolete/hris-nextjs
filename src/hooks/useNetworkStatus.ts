@@ -38,7 +38,7 @@ export const store = {
   },
 };
 
-export function useNetworkStatus() {
+export function useNetworkStatus() : boolean {
   return useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,

@@ -1,48 +1,46 @@
-"use client";
+'use client'
 
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from 'react'
+import { useAuthVerify, useLogin, useLogout, useRegister } from './hooks'
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
+import { LoginReq } from './types'
+import { useOnce } from '@/hooks/useOnce'
 
 interface AuthContextType {
-  isLogin: boolean;
-  login: () => void;
-  logout: () => void;
+  isLogin: boolean
+  login: (data: LoginReq) => void
+  logout: (data: { refreshToken: string }) => void
+  register: () => void
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | null>(null)
 
 interface AuthContextProviderProps {
-  children: ReactNode;
+  accessToken: string | RequestCookie
+  refreshToken: string | RequestCookie
+  children: ReactNode
 }
 
 export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
-  children,
+  accessToken,
+  refreshToken,
+  children
 }) => {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(!!accessToken && !!refreshToken)
+  const { login } = useLogin(setIsLogin)
+  const { logout } = useLogout(setIsLogin)
+  const { verify } = useAuthVerify(setIsLogin)
+  const { register } = useRegister()
 
-  const login = () => {
-    setIsLogin(true);
-  };
+  useOnce(() => isLogin && verify())
 
-  const logout = () => {
-    setIsLogin(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isLogin, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  return <AuthContext.Provider value={{ isLogin, login, logout, register }}>{children}</AuthContext.Provider>
+}
 
 export const useAuthContext = () => {
-  const context = useContext(AuthContext);
+  const context = useContext(AuthContext)
   if (!context) {
-    throw new Error("useAUthContext must be used within a AuthContextProvider");
+    throw new Error('useAUthContext must be used within a AuthContextProvider')
   }
-  return context;
-};
+  return context
+}
