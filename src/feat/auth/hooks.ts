@@ -3,7 +3,7 @@
 import { useMutation } from '@/hooks/swr'
 import Cookies from 'js-cookie'
 import { LoginResp, LogoutResp, VerifyTokenResp } from './types'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 export function useLogin(setIsLogin: (isLogin: boolean) => void) {
   const { data, trigger: login, error, isMutating } = useMutation<LoginResp>('auth/login')
@@ -32,11 +32,11 @@ export function useAuthVerify(setIsLogin: (isLogin: boolean) => void) {
   } = useMutation<VerifyTokenResp>('auth/verify-token')
 
   useEffect(() => {
-    if (!isMutating && !error && data && data.data.user) {
+    if (!isMutating && !error && data && data?.data?.user) {
       setIsLogin(true)
     }
 
-    if (!isMutating && error) {
+    if (!isMutating && (error || data?.error)) {
       setIsLogin(false)
     }
   }, [isMutating, error, data, setIsLogin])
@@ -44,8 +44,11 @@ export function useAuthVerify(setIsLogin: (isLogin: boolean) => void) {
   return { verify, data, isMutating, error }
 }
 
-export function useLogout(setIsLogin: (isLogin: boolean) => void) {
-  const { data, isMutating, trigger: logout, error } = useMutation<LogoutResp>('auth/logout')
+export function useLogout(isLogin: boolean, setIsLogin: (isLogin: boolean) => void) {
+  const refreshToken = Cookies.get('refreshToken')
+  const { data, isMutating, trigger, error } = useMutation<LogoutResp>('auth/logout', {
+    body: JSON.stringify({ refreshToken })
+  })
 
   useEffect(() => {
     if (!isMutating && !error && data && data.message === 'Successfully logged-out.') {
@@ -55,9 +58,15 @@ export function useLogout(setIsLogin: (isLogin: boolean) => void) {
     }
   }, [isMutating, error, data, setIsLogin])
 
+  const logout = useCallback(() => {
+    if (isLogin) {
+      trigger()
+    }
+  }, [isLogin, trigger])
+
   return { logout, data, isMutating, error }
 }
 
 export function useRegister() {
-  return { register () {} }
+  return { register() {} }
 }

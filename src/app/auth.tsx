@@ -3,15 +3,14 @@
 import { useAuthContext } from '@/feat/auth/context'
 import Cookies from 'js-cookie'
 export function AuthComponent() {
-  const { isLogin } = useAuthContext()
+  const { isLogin, login, logout} = useAuthContext()
 
   const handleLogin = () => {
     login({ username: 'edgartolete', password: 'abc123' })
   }
 
   const handleLogout = () => {
-    const refreshToken = Cookies.get('refreshToken') || ''
-    logout({ refreshToken })
+    logout()
   }
   return (
     <div>

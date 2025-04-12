@@ -1,6 +1,7 @@
 export type BaseResp<T> = {
   message: string,
   data: T,
+  error?: string,
 }
 
 export type LoginReq = {
@@ -16,7 +17,8 @@ export type LoginResp = BaseResp<{
 }>
 
 export type VerifyTokenResp = BaseResp<{
-  user: number
+  user: number,
+  error: string
 }>
 
 export type LogoutResp = BaseResp<{

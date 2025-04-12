@@ -9,7 +9,7 @@ import { useOnce } from '@/hooks/useOnce'
 interface AuthContextType {
   isLogin: boolean
   login: (data: LoginReq) => void
-  logout: (data: { refreshToken: string }) => void
+  logout: () => void
   register: () => void
 }
 
@@ -28,7 +28,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 }) => {
   const [isLogin, setIsLogin] = useState<boolean>(!!accessToken && !!refreshToken)
   const { login } = useLogin(setIsLogin)
-  const { logout } = useLogout(setIsLogin)
+  const { logout } = useLogout(isLogin, setIsLogin)
   const { verify } = useAuthVerify(setIsLogin)
   const { register } = useRegister()
 

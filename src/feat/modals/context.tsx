@@ -29,7 +29,7 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  const query = searchParams.toString();
+  const query = searchParams?.toString();
 
   const openedModals = useMemo(() => {
     const openedModals = new Map<string, ModalType>();
@@ -49,7 +49,7 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
       return;
     }
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams?.toString());
 
     if (open) {
       params.set(key, value ?? "true");
@@ -67,7 +67,7 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
         return { open: false, value: undefined };
       }
 
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       const value = params.get(key);
       return { open: value !== "false", value: value ?? "" };
     },

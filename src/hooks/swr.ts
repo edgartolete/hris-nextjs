@@ -2,7 +2,7 @@ import useSWR, { Key, SWRConfiguration } from 'swr'
 import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
 import Cookies from 'js-cookie'
 import { generateApiURL } from '@/utils/api'
-import { config } from '@/config'
+import { staticConfig } from '@/config'
 
 const fetcher = async ([url, init]: [string, RequestInit]) => {
   const resolvedUrl = generateApiURL(url)
@@ -19,12 +19,15 @@ const fetcher = async ([url, init]: [string, RequestInit]) => {
         }
       }
 
+      console.log('# authInit', authInit)
+
   return await fetch(resolvedUrl, authInit)
     .then((res) => res.json())
     .then((data) => {
-      if (data.error === 'Unauthorized' && config.expiredSession.includes(data.message)) {
+      if (data.error === 'Unauthorized' && staticConfig.expiredSession.includes(data.message)) {
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
+        return data;
       }
       if (data.error) {
         const err = new Error(data.message)
@@ -49,12 +52,12 @@ export function useMutation<T, U extends Key = Key>(
       url,
       {
         method: 'POST',
+        body: JSON.stringify(arg),
         ...init,
         headers: {
           'Content-Type': 'application/json',
           ...init.headers
         },
-        body: JSON.stringify(arg)
       }
     ])
   return useSWRMutation<T, Error, Key, U>(url, mutator, { ...options })
