@@ -29,7 +29,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   const [isLogin, setIsLogin] = useState<boolean>(!!accessToken && !!refreshToken)
   const { login } = useLogin(setIsLogin)
   const { logout } = useLogout(isLogin, setIsLogin)
-  const { verify } = useAuthVerify(setIsLogin)
+  const { verify } = useAuthVerify(isLogin, setIsLogin)
   const { register } = useRegister()
 
   useOnce(() => isLogin && verify())

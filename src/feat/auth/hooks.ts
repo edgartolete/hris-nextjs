@@ -23,7 +23,7 @@ export function useLogin(setIsLogin: (isLogin: boolean) => void) {
   return { login, data, isMutating, error }
 }
 
-export function useAuthVerify(setIsLogin: (isLogin: boolean) => void) {
+export function useAuthVerify(isLogin: boolean, setIsLogin: (isLogin: boolean) => void) {
   const {
     data,
     trigger: verify,
@@ -32,14 +32,10 @@ export function useAuthVerify(setIsLogin: (isLogin: boolean) => void) {
   } = useMutation<VerifyTokenResp>('auth/verify-token')
 
   useEffect(() => {
-    if (!isMutating && !error && data && data?.data?.user) {
-      setIsLogin(true)
-    }
-
-    if (!isMutating && (error || data?.error)) {
+    if (isLogin && !isMutating && (error || data?.error)) {
       setIsLogin(false)
     }
-  }, [isMutating, error, data, setIsLogin])
+  }, [isMutating, error, data, setIsLogin, isLogin])
 
   return { verify, data, isMutating, error }
 }
