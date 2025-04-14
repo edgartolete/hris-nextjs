@@ -3,12 +3,12 @@ import { generateApiURL } from '@/utils/api'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-export default async function ProtectServer({ children }: { children: React.ReactNode }) {
+export default async function AuthLayoutProvider({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('accessToken')
 
-  if (!accessToken) {
-    redirect('/?redirect=unauthorized')
+  if (!accessToken?.value) {
+    return children
   }
 
   const resolvedUrl = generateApiURL('auth/verify-token')
@@ -22,9 +22,9 @@ export default async function ProtectServer({ children }: { children: React.Reac
     .then((data) => [null, data])
     .catch((err) => [err, null])) as [Error | null, VerifyTokenResp | null]
 
-  if (err || (data && data.message !== 'Successfully verified token.')) {
-    redirect('/?redirect=unauthorized' )
-  }
 
+  if (!err && (data && data.message === 'Successfully verified token.')) {
+    redirect('/dashboard')
+  }
   return children
 }

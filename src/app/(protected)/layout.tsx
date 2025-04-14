@@ -1,5 +1,5 @@
 import Protect from './protect'
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return <Protect>{children}</Protect>
 }
