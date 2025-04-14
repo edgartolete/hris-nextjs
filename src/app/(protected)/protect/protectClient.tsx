@@ -1,12 +1,13 @@
 'use client'
 
-import { useAuthContext } from '@/feat/auth/context'
+import { authAtom } from '@/feat/auth/atom'
+import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { useLayoutEffect } from 'react'
 
 export default function ProtectClient({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const { isLogin } = useAuthContext()
+  const isLogin = useAtomValue(authAtom)
 
   useLayoutEffect(() => {
     if (!isLogin) {

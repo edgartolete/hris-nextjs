@@ -1,9 +1,9 @@
 'use client'
 
-import { useAuthContext } from '@/feat/auth/context'
+import { useLogout } from '@/feat/auth/hooks'
 
 export function Logout() {
-  const { logout } = useAuthContext()
+  const { logout } = useLogout()
   return (
     <div className='flex flex-col items-center justify-center h-screen'>
       <h1 className='text-2xl font-bold mb-4'>Logout</h1>
