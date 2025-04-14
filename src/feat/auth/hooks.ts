@@ -3,11 +3,10 @@
 import { useMutation } from '@/hooks/swr'
 import Cookies from 'js-cookie'
 import { LoginResp, LogoutResp, VerifyTokenResp } from './types'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { useAtom, useSetAtom } from 'jotai'
-import { authAtom } from './provider'
+import { authAtom } from './atom'
 import { useOnce } from '@/hooks/useOnce'
-// import { useOnce } from '@/hooks/useOnce'
 
 export function useLogin() {
   const setIsLogin = useSetAtom(authAtom)
@@ -35,12 +34,7 @@ export function useLogin() {
 }
 
 export function useAuthVerify() {
-  const [atom, setIsLogin] = useAtom(authAtom)
-
-  const handleSetLogin = (val: boolean) => {
-    console.log('# handleSetLogin: ', val)
-    setIsLogin(val)
-  }
+  const setIsLogin = useSetAtom(authAtom)
 
   const {
     data,
@@ -53,21 +47,17 @@ export function useAuthVerify() {
     {
       onSuccess: (data) => {
         if (data.message === 'Successfully verified token.') {
-          console.log('useAuthVerify onSuccess message')
-          handleSetLogin(true)
+          setIsLogin(true)
         }
         if (data.error) {
-          console.log('useAuthVerify onSuccess error')
-          handleSetLogin(false)
+          setIsLogin(false)
           Cookies.remove('accessToken')
           Cookies.remove('refreshToken')
         }
       },
-      onError: () => handleSetLogin(false)
+      onError: () => setIsLogin(false)
     }
   )
-
-  console.log('# useAuthVerify atom', atom)
 
   useOnce(() => verify())
 
@@ -91,12 +81,11 @@ export function useLogout() {
           Cookies.remove('refreshToken')
           setIsLogin(false)
         }
-      }
-    }
+      },
+    },
   )
 
   const logout = useCallback(() => {
-    console.log('#isLogin', isLogin)
     if (isLogin) {
       trigger()
     }

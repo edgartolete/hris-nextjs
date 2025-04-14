@@ -1,6 +1,6 @@
 'use client'
 
-import { authAtom } from '@/feat/auth/provider'
+import { authAtom } from '@/feat/auth/atom'
 import { useAtomValue } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { useLayoutEffect } from 'react'
