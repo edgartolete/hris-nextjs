@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { generateApiURL } from '@/utils/api'
 import { staticConfig } from '@/config'
 
-const fetcher = async ([url, init]: [string, RequestInit]) => {
+export const fetcher = async ([url, init]: [string, RequestInit]) => {
   const resolvedUrl = generateApiURL(url)
   const accessToken = Cookies.get('accessToken')
 
@@ -13,9 +13,9 @@ const fetcher = async ([url, init]: [string, RequestInit]) => {
     : {
         ...init,
         headers: {
-          ...init.headers,
           'Authorization': `Bearer ${accessToken}`,
           credentials: 'include',
+          ...init.headers,
         }
       }
 

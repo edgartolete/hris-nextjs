@@ -12,7 +12,7 @@ export default async function Providers({
   const refreshToken = cookieStore.get('refreshToken') || ''
 
   return (
-    <AuthContextProvider accessToken={accessToken} refreshToken={refreshToken}>
+    <AuthContextProvider hasTokens={!!accessToken && !!refreshToken}>
       <ModalContextProvider>{children}</ModalContextProvider>
     </AuthContextProvider>
   )

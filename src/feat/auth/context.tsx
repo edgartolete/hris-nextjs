@@ -1,40 +1,40 @@
 'use client'
 
-import { createContext, ReactNode, useContext, useState } from 'react'
-import { useAuthVerify, useLogin, useLogout, useRegister } from './hooks'
-import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import { LoginReq } from './types'
-import { useOnce } from '@/hooks/useOnce'
+import { useSearchParams } from 'next/navigation'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
 
 interface AuthContextType {
   isLogin: boolean
-  login: (data: LoginReq) => void
-  logout: () => void
-  register: () => void
+  setIsLogin: (val: boolean) => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 interface AuthContextProviderProps {
-  accessToken: string | RequestCookie
-  refreshToken: string | RequestCookie
+  hasTokens: boolean
   children: ReactNode
 }
 
 export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
-  accessToken,
-  refreshToken,
+  hasTokens,
   children
 }) => {
-  const [isLogin, setIsLogin] = useState<boolean>(!!accessToken && !!refreshToken)
-  const { login } = useLogin(setIsLogin)
-  const { logout } = useLogout(isLogin, setIsLogin)
-  const { verify } = useAuthVerify(isLogin, setIsLogin)
-  const { register } = useRegister()
+  const [isLogin, setIsLogin] = useState<boolean>(hasTokens)
 
-  useOnce(() => isLogin && verify())
+  const searchParams = useSearchParams()
 
-  return <AuthContext.Provider value={{ isLogin, login, logout, register }}>{children}</AuthContext.Provider>
+  useEffect(() => {
+    const redirectVal = searchParams?.get('redirect')
+
+    if (redirectVal === 'unauthorized') {
+      Cookies.remove('accessToken')
+      Cookies.remove('refreshToken')
+      setIsLogin(false)
+    }
+  }, [searchParams, setIsLogin])
+
+  return <AuthContext.Provider value={{ isLogin, setIsLogin }}>{children}</AuthContext.Provider>
 }
 
 export const useAuthContext = () => {

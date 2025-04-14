@@ -1,9 +1,4 @@
-import Cookies from 'js-cookie'
-
 export default function Page() {
-  const cookie = Cookies.get('auth')
-
-  console.log('cookie', cookie)
 
   return (
     <div>

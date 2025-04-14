@@ -1,9 +1,12 @@
 'use client'
 
 import { useAuthContext } from '@/feat/auth/context'
+import { useLogin, useLogout } from '@/feat/auth/hooks'
 import Cookies from 'js-cookie'
 export function AuthComponent() {
-  const { isLogin, login, logout} = useAuthContext()
+  const { isLogin } = useAuthContext()
+  const { logout } = useLogout()
+  const { login} = useLogin()
 
   const handleLogin = () => {
     login({ username: 'edgartolete', password: 'abc123' })
