@@ -3,93 +3,62 @@
 import { useMutation } from '@/hooks/swr'
 import Cookies from 'js-cookie'
 import { LoginResp, LogoutResp, VerifyTokenResp } from './types'
-import { useCallback } from 'react'
-import { useAtom, useSetAtom } from 'jotai'
-import { authAtom } from './atom'
-import { useOnce } from '@/hooks/useOnce'
+import { useCallback, useEffect } from 'react'
 
-export function useLogin() {
-  const setIsLogin = useSetAtom(authAtom)
-  const {
-    data,
-    trigger: login,
-    error,
-    isMutating
-  } = useMutation<LoginResp>(
-    'auth/login',
-    {},
-    {
-      onSuccess: ({ data }) => {
-        if (data?.userId) {
-          Cookies.set('accessToken', data.accessToken)
-          Cookies.set('refreshToken', data.refreshToken)
-          setIsLogin(true)
-        }
-      },
-      onError: () => setIsLogin(false)
+export function useLogin(setIsLogin: (isLogin: boolean) => void) {
+  const { data, trigger: login, error, isMutating } = useMutation<LoginResp>('auth/login')
+
+  useEffect(() => {
+    if (!isMutating && !error && data && data.data.userId) {
+      Cookies.set('accessToken', data.data.accessToken)
+      Cookies.set('refreshToken', data.data.refreshToken)
+      setIsLogin(true)
     }
-  )
+
+    if (!isMutating && error) {
+      setIsLogin(false)
+    }
+  }, [isMutating, error, data, setIsLogin])
 
   return { login, data, isMutating, error }
 }
 
-export function useAuthVerify() {
-  const setIsLogin = useSetAtom(authAtom)
-
+export function useAuthVerify(isLogin: boolean, setIsLogin: (isLogin: boolean) => void) {
   const {
     data,
     trigger: verify,
     isMutating,
     error
-  } = useMutation<VerifyTokenResp>(
-    'auth/verify-token',
-    {},
-    {
-      onSuccess: (data) => {
-        if (data.message === 'Successfully verified token.') {
-          setIsLogin(true)
-        }
-        if (data.error) {
-          setIsLogin(false)
-          Cookies.remove('accessToken')
-          Cookies.remove('refreshToken')
-        }
-      },
-      onError: () => setIsLogin(false)
-    }
-  )
+  } = useMutation<VerifyTokenResp>('auth/verify-token')
 
-  useOnce(() => verify())
+  useEffect(() => {
+    if (isLogin && !isMutating && (error || data?.error)) {
+      setIsLogin(false)
+    }
+  }, [isMutating, error, data, setIsLogin, isLogin])
 
   return { verify, data, isMutating, error }
 }
 
-export function useLogout() {
-  const [isLogin, setIsLogin] = useAtom(authAtom)
+export function useLogout(isLogin: boolean, setIsLogin: (isLogin: boolean) => void) {
   const refreshToken = Cookies.get('refreshToken')
-  const { data, isMutating, trigger, error } = useMutation<LogoutResp>(
-    'auth/logout',
-    {
-      body: JSON.stringify({ refreshToken })
-    },
-    {
-      onSuccess: (data) => {
-        console.log('#logout onSuccess')
-        if (data?.message === 'Successfully logged-out.') {
-          console.log('#if condition ok')
-          Cookies.remove('accessToken')
-          Cookies.remove('refreshToken')
-          setIsLogin(false)
-        }
-      },
-    },
-  )
+  const { data, isMutating, trigger, error } = useMutation<LogoutResp>('auth/logout', {
+    body: JSON.stringify({ refreshToken })
+  })
+
+  useEffect(() => {
+    if (!isMutating && !error && data && data.message === 'Successfully logged-out.') {
+      Cookies.remove('accessToken')
+      Cookies.remove('refreshToken')
+      setIsLogin(false)
+    }
+  }, [isMutating, error, data, setIsLogin])
 
   const logout = useCallback(() => {
     if (isLogin) {
       trigger()
     }
-  }, [trigger, isLogin])
+  }, [isLogin, trigger])
 
   return { logout, data, isMutating, error }
 }
