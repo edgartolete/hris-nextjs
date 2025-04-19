@@ -1,46 +1,38 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
+import { createContext, ReactNode, useContext, useState } from 'react'
+import { User } from './types'
 
 interface AuthContextType {
-  isLogin: boolean
-  setIsLogin: (val: boolean) => void
+  user?: User | null
+  setUser: (user: User | null) => void
+  isLogin?: boolean
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 interface AuthContextProviderProps {
-  hasTokens: boolean
+  initUser?: User | null
+  hasToken?: boolean
   children: ReactNode
 }
 
-export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
-  hasTokens,
-  children
-}) => {
-  const [isLogin, setIsLogin] = useState<boolean>(hasTokens)
+export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ initUser = null, children }) => {
+  const [user, setUser] = useState<User | null>(initUser)
 
-  const searchParams = useSearchParams()
+  const isLogin = Boolean(user?.id);
 
-  useEffect(() => {
-    const redirectVal = searchParams?.get('redirect')
-
-    if (redirectVal === 'unauthorized') {
-      Cookies.remove('accessToken')
-      Cookies.remove('refreshToken')
-      setIsLogin(false)
-    }
-  }, [searchParams, setIsLogin])
-
-  return <AuthContext.Provider value={{ isLogin, setIsLogin }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={{ user, setUser, isLogin }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext)
   if (!context) {
-    throw new Error('useAUthContext must be used within a AuthContextProvider')
+    throw new Error('useAuthContext must be used within a AuthContextProvider')
   }
   return context
 }

@@ -2,11 +2,12 @@
 
 import { useAuthContext } from '@/feat/auth/context'
 import { useLogin, useLogout } from '@/feat/auth/hooks'
-import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation'
 export function AuthComponent() {
+  const router = useRouter()
   const { isLogin } = useAuthContext()
   const { logout } = useLogout()
-  const { login} = useLogin()
+  const { login } = useLogin()
 
   const handleLogin = () => {
     login({ username: 'edgartolete', password: 'abc123' })
@@ -15,12 +16,17 @@ export function AuthComponent() {
   const handleLogout = () => {
     logout()
   }
+
+  const gotoDashboard = () => {
+    if (isLogin) router.push('/dashboard')
+  }
   return (
     <div>
       <h1>Auth Component</h1>
-      <p>This is the auth component. isLogin: {isLogin ? 'YES' : 'NO'}</p>
+      <p>This is the auth component. isLogin: {`${isLogin}`}</p>
       <button onClick={handleLogin}>Login</button>
       <button onClick={handleLogout}>logout</button>
+      <button onClick={gotoDashboard}>dashboard</button>
     </div>
   )
 }

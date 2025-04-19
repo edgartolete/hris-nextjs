@@ -12,15 +12,31 @@ export type LoginReq = {
 export type LoginResp = BaseResp<{
   accessToken: string
   refreshToken: string
-  username: string
-  userId: number
-}>
+} & User>
 
 export type VerifyTokenResp = BaseResp<{
-  user: number,
+  user: User,
   error: string
 }>
+
+export type VerifyUserResp = BaseResp<{
+  user: User,
+  error: string
+}>
+
 
 export type LogoutResp = BaseResp<{
   message: string
 }>
+
+
+export type User = {
+  id: number
+  firstName: string
+  lastName: string
+  username: string
+  email: string
+  isActive: boolean
+  isVerified: boolean
+  isEmailVerified: boolean
+}

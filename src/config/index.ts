@@ -4,5 +4,5 @@ export const staticConfig = {
     'Expired Token',
     'Invalid Token',
     'No token from header'
-  ]
+  ],
 }

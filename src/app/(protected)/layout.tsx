@@ -1,5 +1,11 @@
-import Protect from './protect'
+import ProtectClient from './protect-client'
+import ProtectServer from './protect-server'
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  return <Protect>{children}</Protect>
+  return (
+    <ProtectServer>
+      <ProtectClient />
+      {children}
+    </ProtectServer>
+  )
 }

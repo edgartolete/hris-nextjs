@@ -28,3 +28,4 @@ export default async function AuthLayoutProvider({ children }: { children: React
   }
   return children
 }
+
