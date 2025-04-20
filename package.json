@@ -9,22 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.0.2",
+    "@mui/material-nextjs": "^7.0.2",
+    "@tailwindcss/postcss": "^4.1.4",
     "@types/js-cookie": "^3.0.6",
     "clx": "^1.0.0",
     "date-fns": "^4.1.0",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "^15.2.4",
+    "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
     "swr": "^2.3.3",
+    "tailwindcss": "^4.1.4",
     "ts-pattern": "^5.7.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -32,7 +38,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
     "sass": "^1.86.3",
-    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

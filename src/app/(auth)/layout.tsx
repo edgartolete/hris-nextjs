@@ -1,5 +1,11 @@
-import AuthLayoutProvider from './provider'
+import { Container } from "@mui/material";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return <AuthLayoutProvider>{children}</AuthLayoutProvider>
+  return (
+    <>
+    <Container maxWidth="xs" sx={{ height: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      {children}
+    </Container>
+    </>
+  )
 }

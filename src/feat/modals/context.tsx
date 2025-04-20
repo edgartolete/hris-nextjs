@@ -77,7 +77,7 @@ export const ModalContextProvider: React.FC<ModalContextProviderProps> = ({
   return (
     <ModalContext.Provider value={{ openedModals, setModalState, getModalState }}>
       {children}
-      <ModalRenderer />
+      {/*<ModalRenderer /> */}
     </ModalContext.Provider>
   );
 };
