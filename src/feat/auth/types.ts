@@ -22,6 +22,11 @@ export type RegisterReq = {
   email: string
 }
 
+export type RenewRefreshTokenResp = BaseResp<{
+  accessToken: string
+  refreshToken: string
+}>
+
 export type RegisterResp = BaseResp<{
   accessToken: string
   refreshToken: string

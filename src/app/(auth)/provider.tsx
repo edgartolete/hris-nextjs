@@ -24,7 +24,7 @@ export default async function AuthLayoutProvider({ children }: { children: React
 
 
   if (!err && (data && data.message === 'Successfully verified token.')) {
-    redirect('/dashboard')
+    redirect('/home')
   }
   return children
 }

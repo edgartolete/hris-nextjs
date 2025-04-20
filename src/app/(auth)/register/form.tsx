@@ -25,7 +25,7 @@ export default function RegisterForm() {
 
   useEffect(() => {
     if (isLogin) {
-      router.push("/dashboard")
+      router.push("/home")
     }
   }, [isLogin, router])
 

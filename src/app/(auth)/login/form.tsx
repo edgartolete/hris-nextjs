@@ -27,7 +27,7 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (isLogin) {
-      router.push("/dashboard")
+      router.push("/home")
     }
   }, [isLogin, router])
 

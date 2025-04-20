@@ -18,7 +18,7 @@ export function AuthComponent() {
   }
 
   const gotoDashboard = () => {
-    if (isLogin) router.push('/dashboard')
+    if (isLogin) router.push('/home')
   }
   return (
     <div>

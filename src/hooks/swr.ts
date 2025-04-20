@@ -1,32 +1,49 @@
-import useSWR, { Key, SWRConfiguration } from 'swr'
-import useSWRMutation, { SWRMutationConfiguration } from 'swr/mutation'
-import Cookies from 'js-cookie'
-import { generateApiURL } from '@/utils/api'
-import { staticConfig } from '@/config'
+import useSWR, { Key, SWRConfiguration } from "swr"
+import useSWRMutation, { SWRMutationConfiguration } from "swr/mutation"
+import Cookies from "js-cookie"
+import { generateApiURL } from "@/utils/api"
+import { staticConfig } from "@/app/config"
+import { renewRefreshToken } from "@/feat/auth/service"
 
 export const fetcher = async ([url, init]: [string, RequestInit]) => {
   const resolvedUrl = generateApiURL(url)
-  const accessToken = Cookies.get('accessToken')
+  const accessToken = Cookies.get("accessToken")
 
   const authInit = !accessToken
     ? init
     : {
         ...init,
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          credentials: 'include',
-          ...init.headers,
+          Authorization: `Bearer ${accessToken}`,
+          credentials: "include",
+          ...init.headers
         }
       }
 
-      console.log('# authInit', authInit)
-
   return await fetch(resolvedUrl, authInit)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.error === 'Unauthorized' && staticConfig.expiredSession.includes(data.message)) {
-        Cookies.remove('accessToken')
-        Cookies.remove('refreshToken')
+    .then(res => res.json())
+    .then(async data => {
+      if (data.message === "Expired Token") {
+        const [err, data] = await renewRefreshToken(Cookies.get("refreshToken") || "")
+
+        if (!err && data?.message === "Successfully renew RefreshToken.") {
+          Cookies.set("accessToken", data.data.accessToken)
+          Cookies.set("refreshToken", data.data.refreshToken)
+
+          const retryInit = {
+            ...init,
+            headers: {
+              Authorization: `Bearer ${data.data.accessToken}`,
+              credentials: "include",
+              ...init.headers
+            }
+          }
+
+          return await fetch(resolvedUrl, retryInit).then(res => res.json())
+        }
+      }
+      if (staticConfig.expiredSession.includes(data.message)) {
+        Cookies.remove("accessToken")
       }
       return data
     })
@@ -45,13 +62,13 @@ export function useMutation<T, U extends Key = Key>(
     fetcher([
       url,
       {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(arg),
         ...init,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...init.headers
-        },
+        }
       }
     ])
   return useSWRMutation<T, Error, Key, U>(url, mutator, { ...options })
