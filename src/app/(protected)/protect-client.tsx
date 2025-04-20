@@ -9,7 +9,7 @@ export default function ProtectClient() {
   const router = useRouter()
 
   useEffect(() => {
-  if (!isLogin) router.push('/')
+  if (!isLogin) router.push('/login')
   },[isLogin, router])
 
   return null

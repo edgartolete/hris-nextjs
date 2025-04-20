@@ -27,12 +27,6 @@ export const fetcher = async ([url, init]: [string, RequestInit]) => {
       if (data.error === 'Unauthorized' && staticConfig.expiredSession.includes(data.message)) {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
-        return data;
-      }
-      if (data.error) {
-        const err = new Error(data.message)
-        err.name = data.error
-        throw err
       }
       return data
     })

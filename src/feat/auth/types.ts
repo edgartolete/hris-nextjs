@@ -14,6 +14,19 @@ export type LoginResp = BaseResp<{
   refreshToken: string
 } & User>
 
+export type RegisterReq = {
+  username: string
+  password: string
+  firstName: string
+  lastName: string
+  email: string
+}
+
+export type RegisterResp = BaseResp<{
+  accessToken: string
+  refreshToken: string
+} & User>
+
 export type VerifyTokenResp = BaseResp<{
   user: User,
   error: string
