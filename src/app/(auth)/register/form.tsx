@@ -3,7 +3,7 @@
 import { useAuthContext } from "@/feat/auth/context"
 import { useRegister } from "@/feat/auth/hooks"
 import { RegisterReq } from "@/feat/auth/types"
-import { Button, TextField } from "@mui/material"
+import { Alert, Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form"
@@ -13,7 +13,7 @@ export default function RegisterForm() {
 
   const { isLogin } = useAuthContext()
 
-  const { trigger: onRegister } = useRegister()
+  const { trigger: onRegister, data } = useRegister()
 
   const { handleSubmit, register } = useForm<RegisterReq>()
 
@@ -74,6 +74,9 @@ export default function RegisterForm() {
       <Button type="submit" variant="contained" className="w-full" sx={{ marginTop: 2 }}>
         Submit
       </Button>
+      { data?.error && (
+        <Alert severity="error" sx={{ marginTop: 2 }}>{data.message}</Alert>
+      )}
     </form>
   )
 }

@@ -3,7 +3,7 @@
 import { useAuthContext } from "@/feat/auth/context"
 import { useLogin } from "@/feat/auth/hooks"
 import { LoginReq } from "@/feat/auth/types"
-import { Button, TextField } from "@mui/material"
+import { Alert, Button, TextField } from "@mui/material"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form"
@@ -11,7 +11,7 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form"
 export default function LoginForm() {
   const router = useRouter()
 
-  const { trigger: login } = useLogin()
+  const { trigger: login, data } = useLogin()
 
   const { isLogin } = useAuthContext()
 
@@ -52,6 +52,11 @@ export default function LoginForm() {
       <Button variant="contained" className="w-full" type="submit" sx={{ marginTop: 2 }}>
         Submit
       </Button>
+      {data?.error && (
+          <Alert severity="error" className="w-full">
+            {data.message}
+          </Alert>
+      )}
     </form>
   )
 }
