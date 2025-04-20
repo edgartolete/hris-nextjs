@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation'
 export function AuthComponent() {
   const router = useRouter()
   const { isLogin } = useAuthContext()
-  const { logout } = useLogout()
-  const { login } = useLogin()
+  const { trigger: logout } = useLogout()
+  const { trigger: login } = useLogin()
 
   const handleLogin = () => {
     login({ username: 'edgartolete', password: 'abc123' })
