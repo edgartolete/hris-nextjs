@@ -27,6 +27,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications"
 import Badge from "@mui/material/Badge"
 import { getSidebarIcon } from "@/components/icons"
 import { Container } from "@mui/material"
+import { useRouter } from "next/navigation"
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
@@ -133,6 +134,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== "open" })
 function Header({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { trigger: logout } = useLogout()
+  const router = useRouter()
 
   const handleLogout = () => {
     logout()
@@ -144,6 +146,11 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => 
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
+  }
+
+  const handleProfile = () => {
+    setAnchorEl(null)
+    router.push("/profile")
   }
 
   const handleClose = () => {
@@ -201,8 +208,7 @@ function Header({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => 
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}>
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleProfile}>Profile</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </div>
@@ -231,8 +237,8 @@ function Minirawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) 
             <Divider />
             <List>
               {item.map((item, index) => (
-                <Link href={item.path} key={item.path}>
-                  <ListItem key={item.path} disablePadding sx={{ display: "block" }}>
+                <Link href={item?.path || "/"} key={item?.path}>
+                  <ListItem key={item?.path} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
                       onClick={handleDrawerClose}
                       sx={[
@@ -262,10 +268,10 @@ function Minirawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) 
                                 mr: "auto"
                               }
                         ]}>
-                        {getSidebarIcon({ key: item.key })}
+                        {getSidebarIcon({ key: item?.key || ""  })}
                       </ListItemIcon>
                       <ListItemText
-                        primary={item.name}
+                        primary={item?.name}
                         sx={[
                           open
                             ? {

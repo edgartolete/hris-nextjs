@@ -1,7 +1,7 @@
-export default function DepartmentsPage() {
+export default function ProfilePage() {
   return (
     <div>
-      <h1>Departments</h1>
+      <h1>Profile</h1>
       <p> (Feature coming soon...)</p>
     </div>
   )

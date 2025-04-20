@@ -1,7 +1,7 @@
-export default function DepartmentsPage() {
+export default function FeedbackPage() {
   return (
     <div>
-      <h1>Departments</h1>
+      <h1>Feedback</h1>
       <p> (Feature coming soon...)</p>
     </div>
   )

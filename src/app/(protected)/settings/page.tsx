@@ -7,6 +7,7 @@ export default function SettingsPage() {
       <h1 className='text-2xl font-bold mb-4'>Settings</h1>
       <p className='text-gray-600'>This is the settings page.</p>
       <Link href='/home' className='mt-4 text-blue-500 hover:underline'>Dashboard</Link>
+      <p> (Feature coming soon...)</p>
       <Logout />
     </div>
   )

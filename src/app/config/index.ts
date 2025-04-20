@@ -46,6 +46,12 @@ export const staticConfig = {
         path: "/documents"
       }
     ],
-    []
+    // [
+      // {
+      //   key: "feedback",
+      //   name: "Feedback",
+      //   path: "/feedback"
+      // }
+    // ]
   ]
 }

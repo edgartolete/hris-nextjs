@@ -6,6 +6,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import WorkOffIcon from '@mui/icons-material/WorkOff';
+import SendIcon from '@mui/icons-material/Send';
 import { SxProps, Theme } from "@mui/material"
 
 type FontSize = "small" | "medium" | "large" | "inherit"
@@ -42,6 +43,8 @@ export function getSidebarIcon({ key, ...props }: Props) {
       return <WorkOffIcon {...props} />
     case "documents":
       return <TopicIcon {...props} />
+    case "feedback":
+      return <SendIcon {...props} />
     default:
       return <InboxIcon {...props} />
   }
