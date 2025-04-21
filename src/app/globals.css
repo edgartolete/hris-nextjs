@@ -10,16 +10,16 @@
   --gray3: #cccccc;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --primary: #1565c0;
-    --gray1: #282828;
-    --gray2: #666666;
-    --gray3: #999999;
-  }
-}
+/* @media (prefers-color-scheme: dark) { */
+/*   :root { */
+/*     --background: #0a0a0a; */
+/*     --foreground: #ededed; */
+/*     --primary: #1565c0; */
+/*     --gray1: #282828; */
+/*     --gray2: #666666; */
+/*     --gray3: #999999; */
+/*   } */
+/* } */
 
 body {
   color: var(--foreground);

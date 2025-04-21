@@ -236,11 +236,10 @@ function Minirawer({ open, setOpen }: { open: boolean; setOpen: (open: boolean) 
           <div key={index}>
             <Divider />
             <List>
-              {item.map((item, index) => (
+              {item.map((item) => (
                 <Link href={item?.path || "/"} key={item?.path}>
                   <ListItem key={item?.path} disablePadding sx={{ display: "block" }}>
                     <ListItemButton
-                      onClick={handleDrawerClose}
                       sx={[
                         {
                           minHeight: 48,
